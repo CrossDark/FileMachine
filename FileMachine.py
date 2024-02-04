@@ -21,6 +21,8 @@ def cleanup_symlinks():
 def storage(settings_list):
     """
     处理方法:切换不同文件夹组到目录下
+    设置方法:mode = filing
+            path = 你选中的那组文件夹的父文件夹
     :param settings_list:
     :return:
     """
@@ -42,6 +44,9 @@ def storage(settings_list):
 def projects(settings_list):
     """
     处理方法:将位于不同位置的文件夹集中到当前目录下
+    设置方法:mode = working
+            <项目目录1> = <项目文件夹1><项目文件夹2>
+            …………
     :param settings_list:
     :return:
     """
@@ -67,10 +72,15 @@ def lists():
 
 
 def exec_(get_dir):
+    """
+    依据mode执行不同函数
+    :param get_dir:
+    :return:
+    """
     cleanup_symlinks()
     if get_dir[0][0] == 'mode':
         mode = get_dir[0][1]
-        if mode == 'storage':
+        if mode == 'filing':
             storage(get_dir[1:])
         elif mode == 'working':
             projects(get_dir[1:])
@@ -81,25 +91,6 @@ def exec_(get_dir):
 
 
 def main():
-    """# 尝试读取目录列表
-        try:
-            for dirs in read():
-                # 切换到脚本所在的目录，以防在其它地方执行此脚本
-                os.chdir(os.path.dirname(os.path.abspath(dirs)))
-                # 清理之前的符号链接
-                cleanup_symlinks()
-                # 创建链接
-                storage(settings_list)
-                # 输出结果
-                print('"', os.path.basename(os.path.dirname(dirs)), '"', '执行成功')
-        except FileNotFoundError:
-            # 切换到脚本所在的目录，以防在其它地方执行此脚本
-            # os.chdir(os.path.dirname(os.path.abspath(dirs)))
-            # 清理之前的符号链接
-            cleanup_symlinks()
-            # 创建链接
-            projects(settings_list)
-"""
     exec_(read_dirs('settings.txt'))
 
 
