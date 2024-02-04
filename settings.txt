@@ -1,0 +1,2 @@
+mode = storage
+path = /Users/crossdark/PycharmProjects/FileMachine/Test/A
