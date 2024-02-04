@@ -1,2 +1,2 @@
-mode = storage
+mode = clean
 path = /Users/crossdark/PycharmProjects/FileMachine/Test/A

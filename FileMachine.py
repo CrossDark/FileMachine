@@ -33,8 +33,10 @@ def storage(settings_list):
                 if item_name.startswith('.'):
                     continue
                 # 创建符号链接
-                print(1)
                 os.symlink(os.path.join(sets[1], item_name), item_name)
+            print('链接成功')
+        else:
+            print('请设置path语句')
 
 
 def projects(settings_list):
@@ -56,6 +58,8 @@ def projects(settings_list):
                         print('没有那个文件')
                 else:
                     print('Wrong')
+        else:
+            print('该路径不是目录')
 
 
 def lists():
@@ -65,10 +69,13 @@ def lists():
 def exec_(get_dir):
     cleanup_symlinks()
     if get_dir[0][0] == 'mode':
-        if get_dir[0][1] == 'storage':
+        mode = get_dir[0][1]
+        if mode == 'storage':
             storage(get_dir[1:])
-        elif get_dir[0][1] == 'working':
+        elif mode == 'working':
             projects(get_dir[1:])
+        elif mode == 'clean':
+            pass
     else:
         print('请设置一种模式')
 
