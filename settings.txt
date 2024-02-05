@@ -1,2 +1,13 @@
+#ergger
+<dc><
+cd
 mode = clean
-path = /Users/crossdark/PycharmProjects/FileMachine/Test/A
+efcd
+>
+mode = filing
+#rtyjr ewf
+#rgw
+<erg gbetgertg g>
+/Users/crossdark/PycharmProjects/FileMachine/Test/A
+/Users/crossdark/PycharmProjects/FileMachine/Test/B
+#re
