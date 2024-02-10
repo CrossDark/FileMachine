@@ -4,10 +4,10 @@ cd
 mode = clean
 efcd
 >
-mode = filing
+mode = clean
 #rtyjr ewf
 #rgw
 <erg gbetgertg g>
-/Users/crossdark/PycharmProjects/FileMachine/Test/A
-/Users/crossdark/PycharmProjects/FileMachine/Test/B
+# /Volumes/home/Working/细胞环流/数据/测试数据/20231103图片 = Capture_20.bmp
+/Users/crossdark/PycharmProjects/FileMachine/Test/A = yth.py
 #re

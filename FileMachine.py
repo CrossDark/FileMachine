@@ -62,7 +62,7 @@ def working(settings_list):
     """
     处理方法:将位于不同位置的文件夹集中到当前目录下
     设置方法:mode = working
-            <项目目录1> = <项目文件夹1><项目文件夹2>
+            <项目目录1> = <项目文件夹1> <项目文件夹2>
             …………
     :param settings_list:
     :return:
@@ -70,26 +70,27 @@ def working(settings_list):
     for sets in settings_list:
         if not sets:
             continue
-        if os.path.isdir(sets[0]):
-            for v in sets[1].split(' '):
-                if os.path.exists(os.path.join(sets[0], v)):
-                    try:
-                        os.symlink(os.path.join(sets[0], v), v)
-                        print('"', v, '"', '执行成功')
-                    except FileExistsError:
-                        print('没有那个文件')
-                else:
-                    print('Wrong')
-        else:
-            print('该路径不是目录')
+        for v in sets[1].split(' '):
+            if os.path.exists(os.path.join(sets[0], v)):
+                try:
+                    os.symlink(os.path.join(sets[0], v), v)
+                    print('"', v, '"', '执行成功')
+                except FileExistsError:
+                    print('没有那个文件')
+            else:
+                print('Wrong')
 
 
 def mix(settings_list):
     pass
 
 
+def help_():
+    pass
+
+
 def lists():
-    read_settings()
+    read_settings('list.txt')
 
 
 def exec_(get_dir):
@@ -98,7 +99,6 @@ def exec_(get_dir):
     :param get_dir:
     :return:
     """
-    print(get_dir)
     cleanup_symlinks()
     if get_dir[0][0] == 'mode':
         mode = get_dir[0][1]
@@ -111,6 +111,8 @@ def exec_(get_dir):
             pass
         elif mode == 'mix':
             mix(settings)
+        elif mode == 'help':
+            help_()
 
     else:
         print('请设置一种模式')
