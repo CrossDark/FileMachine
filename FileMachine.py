@@ -89,6 +89,10 @@ def help_():
     pass
 
 
+def info():
+    print('跨越晨昏')
+
+
 def lists():
     read_settings('list.txt')
 
@@ -99,6 +103,7 @@ def exec_(get_dir):
     :param get_dir:
     :return:
     """
+    print(get_dir)
     cleanup_symlinks()
     if get_dir[0][0] == 'mode':
         mode = get_dir[0][1]
@@ -113,6 +118,10 @@ def exec_(get_dir):
             mix(settings)
         elif mode == 'help':
             help_()
+        elif mode == 'author' or 'crossdark' or 'info':
+            pass
+        else:
+            pass
 
     else:
         print('请设置一种模式')
