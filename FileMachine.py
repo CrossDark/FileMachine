@@ -3,6 +3,7 @@
 """
 import os
 import re
+import ruamel
 
 
 def read_settings(file_path):
@@ -21,6 +22,18 @@ def read_settings(file_path):
             for line in re.sub(r'#.*\n', '\n', re.sub('<[^>]*>', '', file.read())).split('\n')
             if line.strip() and not line.strip().startswith('#')
         ]
+
+
+def read_yaml(path):
+    """
+    读取yaml并移除被<>扩起来的注释
+    :return:
+    """
+    with open(path, encoding='utf-8') as file:
+        try:
+            return ruamel.yaml.YAML(typ='safe').load(re.sub('<[^>]*>', '', file.read()))
+        except ruamel.yaml.scanner.ScannerError:
+            print('YAML有问题')
 
 
 def make_settings(file_path):
@@ -125,6 +138,40 @@ def exec_(get_dir):
 
     else:
         print('请设置一种模式')
+
+
+def exec_dict(get: dict):
+    for k, v in get.items():
+        if k == 'filing':
+            filing(v)
+        elif k == 'working':
+            working(v)
+        elif k == 'clean':
+            pass
+        elif k == 'mix':
+            mix(v)
+        elif k == 'help':
+            help_()
+        elif k == 'author' or 'crossdark' or 'info':
+            pass
+        else:
+            pass
+
+
+def exec_list(get: list):
+    for i in get:
+        pass
+
+
+def exec_yaml(get):
+    if type(get) == dict:
+        exec_dict(get)
+    elif type(get) == list:
+        exec_list(get)
+    elif type(get) == str:
+        exec_list(get.split(' '))
+    else:
+        print('应该不会发生这种情况,自己查代码吧……')
 
 
 def main():
