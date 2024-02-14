@@ -3,7 +3,11 @@
 """
 import os
 import re
+import wget
 import ruamel.yaml
+
+
+base_dir = '.'
 
 
 def read_yaml(path):
@@ -24,7 +28,7 @@ def make_settings(file_path):
 
 def cleanup_symlinks():
     """删除当前目录下的所有符号链接。"""
-    for item in os.listdir('.'):
+    for item in os.listdir(base_dir):
         if os.path.islink(item):
             os.unlink(item)
 
@@ -33,11 +37,12 @@ class Filing:
     def __init__(self, settings):
         """
         处理方法:切换不同文件夹组到目录下
-        设置方法:mode = filing
+        设置方法:filing:
                <你选中的那组文件夹的父文件夹>(如果设置了多个父文件夹,请确保它们没有名称相同的子文件夹)
         :param settings:
         :return:
         """
+        self.base = base_dir
         if type(settings) == str:
             self.settings = settings.split(' ')
         elif type(settings) == list:
@@ -57,10 +62,13 @@ class Filing:
                     if item_name.startswith('.'):
                         continue
                     # 创建符号链接
-                    os.symlink(os.path.join(sets, item_name), item_name)
+                    os.symlink(os.path.join(sets, item_name), os.path.join(self.base, item_name))
                 print('链接成功')
             else:
                 print('请设置path语句')
+
+    def path(self):
+        pass
 
 
 class Working:
@@ -98,6 +106,9 @@ class Working:
     def dict(self):
         pass
 
+    def path(self):
+        pass
+
 
 def help_():
     pass
@@ -105,6 +116,7 @@ def help_():
 
 def info():
     print('跨越晨昏')
+    # wget.download('https://crossdark.com', base_dir)
 
 
 def lists():
@@ -136,7 +148,12 @@ class Exec:
             elif k == 'help':
                 help_()
             elif k == 'author' or 'crossdark' or 'info':
+                print(k)
                 info()
+            elif k == 'dir':
+                global base_dir
+                base_dir = v
+                print(3)
             else:
                 pass
 
@@ -148,6 +165,11 @@ class Exec:
                 help_()
             elif i == 'crossdark' or 'author' or 'info':
                 info()
+            elif i == 'dir':
+                # base_dir = v
+                pass
+            else:
+                print('emm')
 
 
 def main():
@@ -159,3 +181,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    print(base_dir)
