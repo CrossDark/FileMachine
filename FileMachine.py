@@ -111,45 +111,48 @@ def lists():
     read_yaml('list.yaml')
 
 
-def exec_dict(get: dict):
-    for k, v in get.items():
-        if k == 'filing':
-            Filing(v)
-        elif k == 'working':
-            Working(v)
-        elif k == 'clean':
-            pass
-        elif k == 'help':
-            help_()
-        elif k == 'author' or 'crossdark' or 'info':
-            pass
+class Exec:
+    def __init__(self, get):
+        cleanup_symlinks()
+        self.get = get
+        if type(get) == dict:
+            self.exec_dict()
+        elif type(get) == list:
+            self.exec_list()
+        elif type(get) == str:
+            self.get = get.split(' ')
+            self.exec_list()
         else:
-            pass
+            print('应该不会发生这种情况,自己查代码吧……')
 
+    def exec_dict(self):
+        for k, v in self.get.items():
+            if k == 'filing':
+                Filing(v)
+            elif k == 'working':
+                Working(v)
+            elif k == 'clean':
+                print('清理成功')
+            elif k == 'help':
+                help_()
+            elif k == 'author' or 'crossdark' or 'info':
+                info()
+            else:
+                pass
 
-def exec_list(get: list):
-    for i in get:
-        if i == 'clean':
-            pass
-        elif i == 'help':
-            help_()
-
-
-def exec_yaml(get):
-    cleanup_symlinks()
-    if type(get) == dict:
-        exec_dict(get)
-    elif type(get) == list:
-        exec_list(get)
-    elif type(get) == str:
-        exec_list(get.split(' '))
-    else:
-        print('应该不会发生这种情况,自己查代码吧……')
+    def exec_list(self):
+        for i in self.get:
+            if i == 'clean':
+                print('清理成功')
+            elif i == 'help':
+                help_()
+            elif i == 'crossdark' or 'author' or 'info':
+                info()
 
 
 def main():
     try:
-        exec_yaml(read_yaml('settings.yaml'))
+        Exec(read_yaml('settings.yaml'))
     except FileNotFoundError:
         make_settings('settings.yaml')
 
