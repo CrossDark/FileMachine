@@ -1,7 +1,0 @@
-working:
-    /opt:
-        - d
-        - ds #e
-operate:
-    - clean
-    - crossdark
