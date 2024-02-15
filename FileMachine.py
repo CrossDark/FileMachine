@@ -71,9 +71,6 @@ class Filing:
             else:
                 print('请设置path语句')
 
-    def path(self):
-        pass
-
 
 class Working:
     def __init__(self, settings):
@@ -85,6 +82,7 @@ class Working:
         :param settings:
         :return:
         """
+        self.dir = base_dir
         for k, v in settings.items():
             self.keys = k
             self.values = v
@@ -98,9 +96,9 @@ class Working:
 
     def list(self):
         for i in self.values:
-            if os.path.exists(os.path.join(self.keys, i)):
+            if os.path.exists(os.path.join(self.keys, os.path.join(self.dir, i))):
                 try:
-                    os.symlink(os.path.join(self.keys, i), i)
+                    os.symlink(os.path.join(self.keys, i), os.path.join(self.dir, i))
                     print('"', i, '"', '执行成功')
                 except FileExistsError:
                     print('没有那个文件或文件已经存在')
@@ -108,9 +106,6 @@ class Working:
                 print('Wrong')
 
     def dict(self):
-        pass
-
-    def path(self):
         pass
 
 
