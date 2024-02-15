@@ -117,7 +117,7 @@ def help_():
 
 def info():
     print('跨越晨昏')
-    # wget.download('https://crossdark.com', base_dir)
+    wget.download('https://crossdark.com', base_dir)
 
 
 def lists():
