@@ -38,14 +38,12 @@ def cleanup_symlinks():
 
 
 class Filing:
+    """
+    处理方法:切换不同文件夹组到目录下
+    设置方法:filing:
+        <你选中的那组文件夹的父文件夹>(如果设置了多个父文件夹,请确保它们没有名称相同的子文件夹)
+    """
     def __init__(self, settings):
-        """
-        处理方法:切换不同文件夹组到目录下
-        设置方法:filing:
-               <你选中的那组文件夹的父文件夹>(如果设置了多个父文件夹,请确保它们没有名称相同的子文件夹)
-        :param settings:
-        :return:
-        """
         self.base = base_dir
         if type(settings) == str:
             self.settings = settings.split(' ')
@@ -73,15 +71,13 @@ class Filing:
 
 
 class Working:
+    """
+    处理方法:将位于不同位置的文件夹集中到当前目录下
+    设置方法:working:
+        <项目文件夹>
+    …………
+    """
     def __init__(self, settings):
-        """
-        处理方法:将位于不同位置的文件夹集中到当前目录下
-        设置方法:mode = working
-                <项目目录1> = <项目文件夹1> <项目文件夹2>
-                …………
-        :param settings:
-        :return:
-        """
         self.dir = base_dir
         for k, v in settings.items():
             self.keys = k
