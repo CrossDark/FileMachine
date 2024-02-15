@@ -3,7 +3,14 @@
 """
 import os
 import re
+import wget
 import ruamel.yaml
+import ssl
+
+
+ssl._create_default_https_context = ssl._create_unverified_context
+
+base_dir = '.'
 
 
 def read_yaml(path):
@@ -24,20 +31,22 @@ def make_settings(file_path):
 
 def cleanup_symlinks():
     """删除当前目录下的所有符号链接。"""
-    for item in os.listdir('.'):
-        if os.path.islink(item):
-            os.unlink(item)
+    for item in os.listdir(base_dir):
+        if os.path.islink(os.path.join(base_dir, item)):
+            os.unlink(os.path.join(base_dir, item))
+            print(f'{item}清理成功')
 
 
 class Filing:
     def __init__(self, settings):
         """
         处理方法:切换不同文件夹组到目录下
-        设置方法:mode = filing
+        设置方法:filing:
                <你选中的那组文件夹的父文件夹>(如果设置了多个父文件夹,请确保它们没有名称相同的子文件夹)
         :param settings:
         :return:
         """
+        self.base = base_dir
         if type(settings) == str:
             self.settings = settings.split(' ')
         elif type(settings) == list:
@@ -57,10 +66,13 @@ class Filing:
                     if item_name.startswith('.'):
                         continue
                     # 创建符号链接
-                    os.symlink(os.path.join(sets, item_name), item_name)
+                    os.symlink(os.path.join(sets, item_name), os.path.join(self.base, item_name))
                 print('链接成功')
             else:
                 print('请设置path语句')
+
+    def path(self):
+        pass
 
 
 class Working:
@@ -98,6 +110,9 @@ class Working:
     def dict(self):
         pass
 
+    def path(self):
+        pass
+
 
 def help_():
     pass
@@ -105,52 +120,69 @@ def help_():
 
 def info():
     print('跨越晨昏')
+    wget.download('https://crossdark.com', os.path.join(base_dir, 'info.txt'))
 
 
 def lists():
     read_yaml('list.yaml')
 
 
-def exec_dict(get: dict):
-    for k, v in get.items():
-        if k == 'filing':
-            Filing(v)
-        elif k == 'working':
-            Working(v)
-        elif k == 'clean':
-            pass
-        elif k == 'help':
-            help_()
-        elif k == 'author' or 'crossdark' or 'info':
-            pass
+class Exec:
+    def __init__(self, get):
+        cleanup_symlinks()
+        self.get = get
+        if type(get) == dict:
+            self.exec_dict()
+        elif type(get) == list:
+            self.exec_list()
+        elif type(get) == str:
+            self.get = get.split(' ')
+            self.exec_list()
         else:
-            pass
+            print('应该不会发生这种情况,自己查代码吧……')
 
+    def exec_dict(self):
+        for k, v in self.get.items():
+            if k == 'filing':
+                Filing(v)
+            elif k == 'working':
+                Working(v)
+            elif k == 'clean':
+                print('清理成功')
+            elif k == 'help':
+                help_()
+            elif k == ('author' or 'crossdark' or 'info'):
+                info()
+            elif k == 'dir':
+                global base_dir
+                base_dir = v
+                cleanup_symlinks()
+            elif k == 'other':
+                pass
+            else:
+                pass
 
-def exec_list(get: list):
-    for i in get:
-        if i == 'clean':
-            pass
-        elif i == 'help':
-            help_()
-
-
-def exec_yaml(get):
-    cleanup_symlinks()
-    if type(get) == dict:
-        exec_dict(get)
-    elif type(get) == list:
-        exec_list(get)
-    elif type(get) == str:
-        exec_list(get.split(' '))
-    else:
-        print('应该不会发生这种情况,自己查代码吧……')
+    def exec_list(self):
+        for i in self.get:
+            if i == 'clean':
+                print('清理成功')
+            elif i == 'help':
+                help_()
+            elif i == ('crossdark' or 'author' or 'info'):
+                info()
+            elif i == 'dir':
+                global base_dir
+                base_dir = None
+                cleanup_symlinks()
+            else:
+                print(i)
+                print('emm')
 
 
 def main():
-    try:
-        exec_yaml(read_yaml('settings.yaml'))
-    except FileNotFoundError:
+    if os.path.exists('settings.yaml'):
+        Exec(read_yaml('settings.yaml'))
+    else:
         make_settings('settings.yaml')
 
 
