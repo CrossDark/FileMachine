@@ -5,7 +5,10 @@ import os
 import re
 import wget
 import ruamel.yaml
+import ssl
 
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 base_dir = '.'
 
@@ -117,7 +120,7 @@ def help_():
 
 def info():
     print('跨越晨昏')
-    wget.download('https://crossdark.com', base_dir)
+    wget.download('https://crossdark.com', os.path.join(base_dir, 'info.txt'))
 
 
 def lists():
@@ -172,6 +175,7 @@ class Exec:
                 base_dir = None
                 cleanup_symlinks()
             else:
+                print(i)
                 print('emm')
 
 
