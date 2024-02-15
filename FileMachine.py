@@ -98,7 +98,7 @@ class Working:
         for i in self.values:
             if os.path.exists(os.path.join(self.keys, os.path.join(self.dir, i))):
                 try:
-                    os.symlink(os.path.join(self.keys, i), os.path.join(self.dir, i))
+                    os.symlink(os.path.join(self.keys, self.dir, i), os.path.join(self.dir, i))
                     print('"', i, '"', '执行成功')
                 except FileExistsError:
                     print('没有那个文件或文件已经存在')
@@ -153,7 +153,7 @@ class Exec:
                 base_dir = v
                 cleanup_symlinks()
             elif k == 'other':
-                pass
+                Exec(v)
             else:
                 pass
 
