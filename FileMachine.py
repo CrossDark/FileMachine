@@ -22,7 +22,6 @@ def read_yaml(path):
 
 def make_settings(file_path):
     """创建设置文件"""
-    print(345222223542222222222)
     with open(file_path, 'w') as file:
         file.write('clean')
 
@@ -30,9 +29,8 @@ def make_settings(file_path):
 def cleanup_symlinks():
     """删除当前目录下的所有符号链接。"""
     for item in os.listdir(base_dir):
-        print(os.path.join(base_dir, item))
-        if os.path.islink(item):
-            os.unlink(item)
+        if os.path.islink(os.path.join(base_dir, item)):
+            os.unlink(os.path.join(base_dir, item))
             print(f'{item}清理成功')
 
 
@@ -178,9 +176,9 @@ class Exec:
 
 
 def main():
-    try:
+    if os.path.exists('settings.yaml'):
         Exec(read_yaml('settings.yaml'))
-    except FileNotFoundError:
+    else:
         make_settings('settings.yaml')
 
 
