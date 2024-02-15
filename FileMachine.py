@@ -22,6 +22,7 @@ def read_yaml(path):
 
 def make_settings(file_path):
     """创建设置文件"""
+    print(345222223542222222222)
     with open(file_path, 'w') as file:
         file.write('clean')
 
@@ -29,8 +30,10 @@ def make_settings(file_path):
 def cleanup_symlinks():
     """删除当前目录下的所有符号链接。"""
     for item in os.listdir(base_dir):
+        print(os.path.join(base_dir, item))
         if os.path.islink(item):
             os.unlink(item)
+            print(f'{item}清理成功')
 
 
 class Filing:
@@ -147,13 +150,14 @@ class Exec:
                 print('清理成功')
             elif k == 'help':
                 help_()
-            elif k == 'author' or 'crossdark' or 'info':
-                print(k)
+            elif k == ('author' or 'crossdark' or 'info'):
                 info()
             elif k == 'dir':
                 global base_dir
                 base_dir = v
-                print(3)
+                cleanup_symlinks()
+            elif k == 'other':
+                pass
             else:
                 pass
 
@@ -163,11 +167,12 @@ class Exec:
                 print('清理成功')
             elif i == 'help':
                 help_()
-            elif i == 'crossdark' or 'author' or 'info':
+            elif i == ('crossdark' or 'author' or 'info'):
                 info()
             elif i == 'dir':
-                # base_dir = v
-                pass
+                global base_dir
+                base_dir = None
+                cleanup_symlinks()
             else:
                 print('emm')
 
@@ -181,4 +186,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    print(base_dir)
