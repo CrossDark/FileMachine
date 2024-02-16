@@ -111,7 +111,7 @@ def help_():
 
 def info():
     print('跨越晨昏')
-    wget.download('https://crossdark.com', os.path.join(base_dir, 'info.txt'))
+    wget.download('https://crossdark.com/', os.path.join(base_dir, 'info.txt'))
 
 
 def lists():
@@ -142,7 +142,7 @@ class Exec:
                 print('清理成功')
             elif k == 'help':
                 help_()
-            elif k in ('author' or 'crossdark' or 'info'):
+            elif k in ('author', 'crossdark', 'info'):
                 info()
             elif k == 'dir':
                 global base_dir
@@ -151,7 +151,7 @@ class Exec:
             elif k == 'other':
                 Exec(v)
             else:
-                print(0)
+                print('未知方法')
 
     def exec_list(self):
         for i in self.get:
@@ -159,20 +159,22 @@ class Exec:
                 print('清理成功')
             elif i == 'help':
                 help_()
-            elif i in ('crossdark' or 'author' or 'info'):
+            elif i in ('crossdark', 'author', 'info'):
                 info()
-            elif i == 'dir':
+            elif i.startswith('dir'):
                 global base_dir
-                base_dir = None
+                base_dir = i[i.rfind('=') + 1:]
+                print(base_dir)
                 cleanup_symlinks()
             else:
-                print(i)
-                print('emm')
+                print('emm什么鬼')
 
 
 def main():
     if os.path.exists('settings.yaml'):
         Exec(read_yaml('settings.yaml'))
+    elif os.path.exists('FileMachine.yaml'):
+        Exec(read_yaml('FileMachine.yaml'))
     else:
         make_settings('settings.yaml')
 
