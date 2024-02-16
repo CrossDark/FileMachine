@@ -142,7 +142,7 @@ class Exec:
                 print('清理成功')
             elif k == 'help':
                 help_()
-            elif k == ('author' or 'crossdark' or 'info'):
+            elif k in ('author' or 'crossdark' or 'info'):
                 info()
             elif k == 'dir':
                 global base_dir
@@ -151,7 +151,7 @@ class Exec:
             elif k == 'other':
                 Exec(v)
             else:
-                pass
+                print(0)
 
     def exec_list(self):
         for i in self.get:
@@ -159,7 +159,7 @@ class Exec:
                 print('清理成功')
             elif i == 'help':
                 help_()
-            elif i == ('crossdark' or 'author' or 'info'):
+            elif i in ('crossdark' or 'author' or 'info'):
                 info()
             elif i == 'dir':
                 global base_dir
