@@ -19,7 +19,6 @@ def read_yaml(path):
     :return:
     """
     with open(path, encoding='utf-8') as file:
-
         return ruamel.yaml.YAML(typ='safe').load(re.sub('<[^>]*>', '', file.read()))
 
 
@@ -66,6 +65,9 @@ class Filing:
                     # 创建符号链接
                     os.symlink(os.path.join(sets, item_name), os.path.join(self.base, item_name))
                 print('链接成功')
+            elif os.path.isfile(sets):
+                os.symlink(sets, os.path.join(self.base, sets))
+                print('单个文件链接成功')
             else:
                 print('请设置path语句')
 
@@ -111,11 +113,12 @@ def help_():
 
 def info():
     print('跨越晨昏')
-    wget.download('https://crossdark.com/', os.path.join(base_dir, 'info.txt'))
+    wget.download('https://crossdark.com/index.php/2024/02/16/filemachine简介/', os.path.join(base_dir, 'info.txt'))
 
 
 def lists():
-    read_yaml('list.yaml')
+    for i in read_yaml('list.yaml'):
+        Exec(i)
 
 
 class Exec:
