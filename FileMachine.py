@@ -44,14 +44,18 @@ class Filing:
     """
     def __init__(self, settings):
         self.base = base_dir
+        self.settings = settings
+        self.files = []
+        self.always = []
+        self.file_path = ''
+        self.always_path = ''
         if type(settings) == str:
             self.settings = settings.split(' ')
+            self.list()
         elif type(settings) == list:
-            self.settings = settings
-        else:
-            print('不支持dict')
-            return
-        self.list()
+            self.list()
+        elif type(settings) == dict:
+            self.dict()
 
     def list(self):
         for sets in self.settings:
@@ -70,6 +74,24 @@ class Filing:
                 print('单个文件链接成功')
             else:
                 print('请设置path语句')
+
+    def dict(self):
+        for k, v in self.settings.items():
+            if k == 'path':
+                self.files = os.listdir(os.path.abspath(v if type(v) == str else v[0]))
+                self.file_path = v
+                self.always_exec()
+            elif k == 'always':
+                self.always = os.listdir(os.path.abspath(v if type(v) == str else v[0]))
+                self.always_path = v
+            else:
+                print('?')
+
+    def always_exec(self):
+        always_path = [i for i in self.always if i in self.files]
+        print(always_path)
+        print(self.file_path)
+        print(self.always_path)
 
 
 class Working:
