@@ -176,8 +176,8 @@ class Exec:
 def main():
     if os.path.exists('settings.yaml'):
         Exec(read_yaml('settings.yaml'))
-    elif os.path.exists('FileMachine.yaml'):
-        Exec(read_yaml('FileMachine.yaml'))
+    elif os.path.exists('.FileMachine.yaml'):
+        Exec(read_yaml('.FileMachine.yaml'))
     else:
         make_settings('settings.yaml')
 
