@@ -101,6 +101,7 @@ class Filing:
         self.temporary = [i for i in self.files if i not in self.always_files]
         self.settings = [self.file_path]
         self.list()
+        self.make_always()
 
 
 class Working:
