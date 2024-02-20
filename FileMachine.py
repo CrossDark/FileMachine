@@ -43,12 +43,15 @@ class Filing:
         <你选中的那组文件夹的父文件夹>(如果设置了多个父文件夹,请确保它们没有名称相同的子文件夹)
     """
     def __init__(self, settings):
-        self.base = base_dir
-        self.settings = settings
-        self.files = []
-        self.always = []
-        self.file_path = ''
-        self.always_path = ''
+        self.base = base_dir  # 根目录
+        self.settings = settings  # 传入的设置(可能是str、list、dict)
+        self.files = []  # path传入的路径下所有文件
+        self.always = []  # always传入的路径下所有文件
+        self.temporary = []  # 临时文件(在path中但不在always中)列表
+        self.always_files = []  # 永久文件列表(在path中同时也在always中)
+        self.file_path = ''  # path传入的路径
+        self.always_path = ''  # always传入的路径
+        self.output_path = os.path.join(self.base, '.output')  # output传入的路径(存放由files和always_files中的同名文件夹合并而成的目录)
         if type(settings) == str:
             self.settings = settings.split(' ')
             self.list()
@@ -61,15 +64,15 @@ class Filing:
         for sets in self.settings:
             if not sets:
                 continue
-            if os.path.isdir(sets):
+            if os.path.isdir(sets):  # 传入的是目录
                 for item_name in os.listdir(os.path.abspath(sets)):
                     # 跳过以'.'开头的隐藏文件和目录
                     if item_name.startswith('.'):
                         continue
                     # 创建符号链接
                     os.symlink(os.path.join(sets, item_name), os.path.join(self.base, item_name))
-                print('链接成功')
-            elif os.path.isfile(sets):
+                    print(f'{item_name}链接成功')
+            elif os.path.isfile(sets):  # 传入的是单个文件
                 os.symlink(sets, os.path.join(self.base, sets))
                 print('单个文件链接成功')
             else:
@@ -80,18 +83,24 @@ class Filing:
             if k == 'path':
                 self.files = os.listdir(os.path.abspath(v if type(v) == str else v[0]))
                 self.file_path = v
-                self.always_exec()
+                self.exec_always()
             elif k == 'always':
                 self.always = os.listdir(os.path.abspath(v if type(v) == str else v[0]))
                 self.always_path = v
             else:
                 print('?')
 
-    def always_exec(self):
-        always_path = [i for i in self.always if i in self.files]
-        print(always_path)
-        print(self.file_path)
-        print(self.always_path)
+    def make_always(self):
+        for file in self.always_files:  #
+            for i in os.listdir(os.path.join(self.always_path, file)):
+                os.symlink((os.path.join(self.always_path, file, i)), os.path.join(self.base, file, i))
+                print(i)
+
+    def exec_always(self):
+        self.always_files = [i for i in self.always if i in self.files]
+        self.temporary = [i for i in self.files if i not in self.always_files]
+        self.settings = [self.file_path]
+        self.list()
 
 
 class Working:
