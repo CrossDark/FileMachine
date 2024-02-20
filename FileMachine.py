@@ -70,7 +70,7 @@ class Filing:
                     if item_name.startswith('.'):
                         continue
                     # 创建符号链接
-                    os.symlink(os.path.join(sets, item_name), os.path.join(self.base, item_name))
+                    os.symlink(os.path.abspath(os.path.join(sets, item_name)), os.path.join(self.base, item_name))
                     print(f'{item_name}链接成功')
             elif os.path.isfile(sets):  # 传入的是单个文件
                 os.symlink(sets, os.path.join(self.base, sets))
