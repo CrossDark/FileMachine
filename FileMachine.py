@@ -97,7 +97,7 @@ class Filing:
                 print(i)
 
     def exec_always(self):
-        self.always_files = [i for i in self.always if i in self.files]
+        self.always_files = [i for i in self.always if (i in self.files and not i.startswith('.'))]
         self.temporary = [i for i in self.files if i not in self.always_files]
         self.settings = [self.file_path]
         self.list()
