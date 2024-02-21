@@ -112,7 +112,6 @@ class Switch:
             cleanup_symlinks(os.path.join(self.always_path, file))
             for i in os.listdir(os.path.join(self.always_path, file)):
                 make_symlink(os.path.abspath(os.path.join(self.always_path, file, i)), os.path.join(self.base, file, i))
-                print(i)
 
     def exec_always(self):
         self.always_files = [i for i in self.always if (i in self.files and not i.startswith('.'))]
