@@ -7,7 +7,6 @@ import wget
 import ruamel.yaml
 import ssl
 
-
 ssl._create_default_https_context = ssl._create_unverified_context
 
 base_dir = '.'
@@ -28,12 +27,17 @@ def make_settings(file_path):
         file.write('clean')
 
 
-def cleanup_symlinks():
+def cleanup_symlinks(dir_=base_dir):
     """删除当前目录下的所有符号链接。"""
-    for item in os.listdir(base_dir):
-        if os.path.islink(os.path.join(base_dir, item)):
-            os.unlink(os.path.join(base_dir, item))
+    for item in os.listdir(dir_):
+        if os.path.islink(os.path.join(dir_, item)):
+            os.unlink(os.path.join(dir_, item))
             print(f'{item}清理成功')
+
+
+class Tree:
+    def __init__(self):
+        pass
 
 
 class Filing:
@@ -42,6 +46,7 @@ class Filing:
     设置方法:filing:
         <你选中的那组文件夹的父文件夹>(如果设置了多个父文件夹,请确保它们没有名称相同的子文件夹)
     """
+
     def __init__(self, settings):
         self.base = base_dir  # 根目录
         self.settings = settings  # 传入的设置(可能是str、list、dict)
@@ -70,7 +75,8 @@ class Filing:
                     if item_name.startswith('.'):
                         continue
                     # 创建符号链接
-                    os.symlink(os.path.abspath(os.path.join(sets, item_name)), os.path.join(self.base, item_name))
+                    os.symlink(os.path.abspath(os.path.join(sets, item_name)),
+                               os.path.abspath(os.path.join(self.base, item_name)))
                     print(f'{item_name}链接成功')
             elif os.path.isfile(sets):  # 传入的是单个文件
                 os.symlink(sets, os.path.join(self.base, sets))
@@ -93,7 +99,7 @@ class Filing:
     def make_always(self):
         for file in self.always_files:  #
             for i in os.listdir(os.path.join(self.always_path, file)):
-                os.symlink((os.path.join(self.always_path, file, i)), os.path.join(self.base, file, i))
+                os.symlink(os.path.abspath(os.path.join(self.always_path, file, i)), os.path.join(self.base, file, i))
                 print(i)
 
     def exec_always(self):
@@ -101,6 +107,7 @@ class Filing:
         self.temporary = [i for i in self.files if i not in self.always_files]
         self.settings = [self.file_path]
         self.list()
+        cleanup_symlinks(self.always_path)
         self.make_always()
 
 
@@ -111,6 +118,7 @@ class Working:
         <项目文件夹>
     …………
     """
+
     def __init__(self, settings):
         self.dir = base_dir
         for k, v in settings.items():
