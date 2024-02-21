@@ -51,8 +51,8 @@ def cleanup_symlinks(dir_=base_dir):
 
 
 class Tree:
-    def __init__(self):
-        pass
+    def __init__(self, get):
+        print(get)
 
 
 class Switch:
@@ -139,22 +139,22 @@ class Working:
 
     def __init__(self, settings):
         self.dir = base_dir
-        for k, v in settings.items():
-            self.keys = k
-            self.values = v
-            if type(v) == list:
-                self.list()
-            elif type(v) == str:
-                self.values = v.split(' ')
-                self.list()
-            elif type(v) == dict:
-                self.dict()
+        self.values = settings
+        if type(settings) == list:
+            self.list()
+        elif type(settings) == str:
+            self.values = settings.split(' ')
+            self.list()
+        elif type(settings) == dict:
+            self.dict()
 
     def list(self):
+        print(self.values)
         for i in self.values:
-            if os.path.exists(os.path.join(self.keys, os.path.join(self.dir, i))):
+            if os.path.exists(os.path.join(self.dir, i)):
+                print(os.path.join(i), os.path.join(self.dir, os.path.basename(i)))
                 try:
-                    os.symlink(os.path.join(self.keys, self.dir, i), os.path.join(self.dir, i))
+                    os.symlink(os.path.join(i), os.path.join(self.dir, os.path.basename(i)))
                     print('"', i, '"', '执行成功')
                 except FileExistsError:
                     print('没有那个文件或文件已经存在')
