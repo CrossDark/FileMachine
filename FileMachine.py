@@ -169,7 +169,7 @@ class Exec:
 
     def exec_dict(self):
         for k, v in self.get.items():
-            if k == 'filing':
+            if k in ('filing', 'switch'):
                 Filing(v)
             elif k == 'working':
                 Working(v)
