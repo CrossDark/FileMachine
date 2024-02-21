@@ -12,6 +12,10 @@ ssl._create_default_https_context = ssl._create_unverified_context
 base_dir = '.'
 
 
+def ignore(file: str):
+    pass
+
+
 def read_yaml(path):
     """
     读取yaml并移除被<>扩起来的注释
@@ -31,14 +35,14 @@ def make_symlink(src, dst):
     try:
         os.symlink(src, dst)
     except FileExistsError:  # 文件已经存在
-        print(f'{dst}链接已经存在')
+        print(f'{os.path.basename(dst)}链接已经存在')
     else:  # 创建成功
-        print(f'{dst}链接成功')
+        print(f'{os.path.basename(dst)}链接成功')
 
 
 def cleanup_symlinks(dir_=base_dir):
     """删除当前目录下的所有符号链接。"""
-    if dir_.startswith('.'):
+    if dir_.startswith('.') and dir_ != '.':
         return
     for item in os.listdir(dir_):
         if os.path.islink(os.path.join(dir_, item)):
