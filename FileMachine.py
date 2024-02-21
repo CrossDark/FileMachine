@@ -27,8 +27,19 @@ def make_settings(file_path):
         file.write('clean')
 
 
+def make_symlink(src, dst):
+    try:
+        os.symlink(src, dst)
+    except FileExistsError:  # 文件已经存在
+        print(f'{dst}链接已经存在')
+    else:  # 创建成功
+        print(f'{dst}链接成功')
+
+
 def cleanup_symlinks(dir_=base_dir):
     """删除当前目录下的所有符号链接。"""
+    if dir_.startswith('.'):
+        return
     for item in os.listdir(dir_):
         if os.path.islink(os.path.join(dir_, item)):
             os.unlink(os.path.join(dir_, item))
@@ -40,7 +51,7 @@ class Tree:
         pass
 
 
-class Filing:
+class Switch:
     """
     处理方法:切换不同文件夹组到目录下
     设置方法:filing:
@@ -70,14 +81,14 @@ class Filing:
             if not sets:
                 continue
             if os.path.isdir(sets):  # 传入的是目录
+                cleanup_symlinks(sets)  # 有什么问题就删了
                 for item_name in os.listdir(os.path.abspath(sets)):
                     # 跳过以'.'开头的隐藏文件和目录
                     if item_name.startswith('.'):
                         continue
                     # 创建符号链接
-                    os.symlink(os.path.abspath(os.path.join(sets, item_name)),
-                               os.path.abspath(os.path.join(self.base, item_name)))
-                    print(f'{item_name}链接成功')
+                    make_symlink(os.path.abspath(os.path.join(sets, item_name)),
+                                 os.path.abspath(os.path.join(self.base, item_name)))
             elif os.path.isfile(sets):  # 传入的是单个文件
                 os.symlink(sets, os.path.join(self.base, sets))
                 print('单个文件链接成功')
@@ -98,14 +109,18 @@ class Filing:
 
     def make_always(self):
         for file in self.always_files:  #
+            cleanup_symlinks(os.path.join(self.always_path, file))
             for i in os.listdir(os.path.join(self.always_path, file)):
-                os.symlink(os.path.abspath(os.path.join(self.always_path, file, i)), os.path.join(self.base, file, i))
+                make_symlink(os.path.abspath(os.path.join(self.always_path, file, i)), os.path.join(self.base, file, i))
                 print(i)
 
     def exec_always(self):
         self.always_files = [i for i in self.always if (i in self.files and not i.startswith('.'))]
         self.temporary = [i for i in self.files if i not in self.always_files]
         self.settings = [self.file_path]
+
+        for file in self.files:
+            cleanup_symlinks(os.path.join(self.file_path, file))
         self.list()
         cleanup_symlinks(self.always_path)
         self.make_always()
@@ -178,7 +193,7 @@ class Exec:
     def exec_dict(self):
         for k, v in self.get.items():
             if k in ('filing', 'switch'):
-                Filing(v)
+                Switch(v)
             elif k == 'working':
                 Working(v)
             elif k == 'clean':
