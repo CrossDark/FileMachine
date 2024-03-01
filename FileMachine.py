@@ -48,11 +48,29 @@ def cleanup_symlinks(dir_=base_dir):
         if os.path.islink(os.path.join(dir_, item)):
             os.unlink(os.path.join(dir_, item))
             print(f'{item}清理成功')
+        # else:
+            # print(f'{item}不是链接')
 
 
-class Tree:
-    def __init__(self, get):
-        print(get)
+def tree(get, path=''):
+    paths = []
+    for key, value in get.items():
+        # 如果值是字典，表示它是一个子目录
+        if isinstance(value, dict):
+            # 递归构建子目录的路径
+            paths.extend(tree(value, os.path.join(path, key)))
+        # 如果值不是字典，表示它是一个文件
+        elif isinstance(value, list):
+            for i in value:
+                paths.append(os.path.join(path, key, i))
+        # 如果值是字符串,则分割
+        elif isinstance(value, str):
+            for i in value.split(' '):
+                paths.append(os.path.join(path, key, i))
+        else:
+            # 添加文件路径到列表中
+            paths.append(os.path.join(path, key))
+    return paths
 
 
 class Switch:
@@ -108,6 +126,9 @@ class Switch:
             elif k == 'always':
                 self.always = os.listdir(os.path.abspath(v if type(v) == str else v[0]))
                 self.always_path = v
+            elif k == 'tree':
+                self.settings = tree(v)
+                self.list()
             else:
                 print('?')
 
